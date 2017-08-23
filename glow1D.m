@@ -1,8 +1,9 @@
 % THIS IS A TEST PROGRAM FOR GLOW PHASE IN 1-D
 % This program does NOT use adiabatic elimination approximation.
 clc;
-clear all; close all;
-Src = 0;
+clear all;
+close all;
+Src = 1; % Source term is switched-off. Only transport allowed.
 [mu_e, D_e, n_0, l_0, t_0, E_0] = units(1.0);
 limiter = @newKorenLimiter;
 L = 600;                    % Gap size
@@ -70,14 +71,15 @@ while(T*t_0 <= 10e-9)
     %     csvwrite(np_fname{1},np);
     %   end
     %---------------------------------------------------------------------%
-    rho = 0*(np-ne);
-    rho(1) = rho(1) + (2*phiLB)/(h^2);             % corr. in source at LB
-    rho(end) = rho(end) + (2*phiRB)/(h^2);         % corr. in source at RB
-    A = spdiags(ones(m,1)*[1 -2 1],-1:1,m,m);
-    A(1,1) = -3;    A(end,end) = -3;               % Dirichlet b.c.
-    A1D = A/(h^2);
-    phi = -A1D\(rho');
-    phi = phi';
+    rho = 1*(np-ne);
+    % rho(1) = rho(1) + (2*phiLB)/(h^2);             % corr. in source at LB
+    % rho(end) = rho(end) + (2*phiRB)/(h^2);         % corr. in source at RB
+    % A = spdiags(ones(m,1)*[1 -2 1],-1:1,m,m);
+    % A(1,1) = -3;    A(end,end) = -3;               % Dirichlet b.c.
+    % A1D = A/(h^2);
+    % phi = -A1D\(rho');
+    % phi = phi';
+    phi = PoiSolv1D(rho,phiLB,phiRB,h);
     
     phiW = 2*phiLB - phi(1);                        % Left Bndy ghost cell
     phiE = 2*phiRB - phi(end);                      % Rght Bndy ghost cell
