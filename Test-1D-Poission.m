@@ -1,1 +1,0 @@
-% Test-case-1D Poisson Equation
