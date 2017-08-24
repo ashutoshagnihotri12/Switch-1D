@@ -10,7 +10,7 @@ L = 600;                    % Gap size
 m = 200;                    % No. of grid cells
 h = L/m;                    % Length of a grid cell
 x = h*([1:m] - 1/2);        % Grid
-mu = 1;                % Ratio of the ion and electron mobilities.
+mu = 1e-3;                % Ratio of the ion and electron mobilities.
 gamma = 0.3;               % Secondary electron emission coefficient.
 
 % Initial condition(s) for electron and ion-density.
@@ -45,7 +45,7 @@ ne0 = 3e-3*exp(-((x-x0).^2)/sigma^2);
 ne = ne0;
 np = np0;
 
-phiLB = 81;       % Applied potential (Anode)
+phiLB = 81;             % Applied potential (Anode)
 phiRB = 0 ;             % Grounded potential (Cathode)
 E_app = phiLB/L;        % Average electric field
 
