@@ -10,7 +10,7 @@ L = 600;                    % Gap size
 m = 200;                    % No. of grid cells
 h = L/m;                    % Length of a grid cell
 x = h*([1:m] - 1/2);        % Grid
-mu = 1e-3;                % Ratio of the ion and electron mobilities.
+mu = 1e-2;                % Ratio of the ion and electron mobilities.
 gamma = 0.3;               % Secondary electron emission coefficient.
 
 % Initial condition(s) for electron and ion-density.
@@ -23,15 +23,15 @@ gamma = 0.3;               % Secondary electron emission coefficient.
 
 % Initial condition 2
 % np0 = (0.5*L < x & x < 0.7*L)*3e-3;
-x0 = 0.5*L;
-sigma = 10;
-np0 = 3e-3*exp(-((x-x0).^2)/sigma^2);
-% ne0 = np0;
-ne0 = 3e-3*exp(-((x-x0).^2)/sigma^2);
+% x0 = 0.5*L;
+% sigma = 10;
+% np0 = 3e-3*exp(-((x-x0).^2)/sigma^2);
+% % ne0 = np0;
+% ne0 = 3e-3*exp(-((x-x0).^2)/sigma^2);
 
 % Initial condition 3
-% ne0 = (0.8*L < x & x < 1.0*L)*1e-6;
-% np0 = ne0;
+ne0 = (0.4*L < x & x < 0.7*L)*1e-6;
+np0 = ne0;
 % ne0 = 0*x;
 
 % Initial condition 4
@@ -56,7 +56,7 @@ jE_ion = zeros(1,m);
 
 counter = 0;
 tic
-while(T*t_0 <= 10e-9)
+while(T*t_0 <= 100e-9)
   np_t = np;
   ne_t = ne;
   F_ne = 0*ne;
@@ -142,7 +142,6 @@ while(T*t_0 <= 10e-9)
 %   jE_int = jE_int/(1.6e-19*2.5e+25);
   
   
-
 subplot(2,2,1)
 plot(x*l_0,ne*n_0,'b-','LineWidth',2)
 axis tight
@@ -155,17 +154,39 @@ axis tight
 grid on
 title('n_{p}[cm^{-3}]')
 
+% subplot(2,2,3)
+% plot(x*l_0,E*E_0,'b-','LineWidth',2)
+% axis tight
+% grid on
+% title('E[kV cm^{-1}]')
+
+% subplot(2,2,4)
+% plot(x*l_0,jE_int,'b-','LineWidth',2)
+% axis tight
+% grid on
+% title('jE_{int}')
+
 subplot(2,2,3)
-plot(x*l_0,E*E_0,'b-','LineWidth',2)
+% plot(x*l_0,(F_ne/2)*(mu_e*n_0*E_0/l_0),'b-','LineWidth',2)
+plot(x*l_0,(F_ne/2),'b-',x*l_0,1./mu^2*ones(1,m),'r-','LineWidth',2)
+% plot(x*l_0,(F_ne/2),'b-',x*l_0,1./mu*ones(m),'r-','LineWidth',2)
 axis tight
 grid on
-title('E[kV cm^{-1}]')
+title('F_{n_{e}}')
+
+% subplot(2,2,4)
+% plot(x*l_0,F_np/2,'b-','LineWidth',2)
+% axis tight
+% grid on
+% title('F_{n_{p}}')
 
 subplot(2,2,4)
-plot(x*l_0,jE_int,'b-','LineWidth',2)
+plot(x*l_0,ne./(np+eps),'b-','LineWidth',2)
 axis tight
 grid on
-title('jE_{int}')
+title('ne/np')
+
+
 % axis([])
 % 
 % ax = axes;
