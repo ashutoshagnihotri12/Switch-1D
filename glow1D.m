@@ -6,12 +6,12 @@ close all;
 Src = 1; % Source term is switched-off. Only transport allowed.
 [mu_e, D_e, n_0, l_0, t_0, E_0] = units(1.0);
 limiter = @newKorenLimiter;
-L = 600;                    % Gap size
+L = 200;                    % Gap size
 m = 200;                    % No. of grid cells
 h = L/m;                    % Length of a grid cell
 x = h*([1:m] - 1/2);        % Grid
-mu = 1e-2;                % Ratio of the ion and electron mobilities.
-gamma = 0.3;               % Secondary electron emission coefficient.
+mu = 0.0035;                % Ratio of the ion and electron mobilities.
+gamma = 0.07;               % Secondary electron emission coefficient.
 
 % Initial condition(s) for electron and ion-density.
 
@@ -30,7 +30,7 @@ gamma = 0.3;               % Secondary electron emission coefficient.
 % ne0 = 3e-3*exp(-((x-x0).^2)/sigma^2);
 
 % Initial condition 3
-ne0 = (0.4*L < x & x < 0.7*L)*1e-6;
+ne0 = (0.5*L < x & x < 0.7*L)*1e-6;
 np0 = ne0;
 % ne0 = 0*x;
 
@@ -45,7 +45,7 @@ np0 = ne0;
 ne = ne0;
 np = np0;
 
-phiLB = 81;             % Applied potential (Anode)
+phiLB = 17;             % Applied potential (Anode)
 phiRB = 0 ;             % Grounded potential (Cathode)
 E_app = phiLB/L;        % Average electric field
 
@@ -56,7 +56,7 @@ jE_ion = zeros(1,m);
 
 counter = 0;
 tic
-while(T*t_0 <= 100e-9)
+while(T*t_0 <= 750e-9)
   np_t = np;
   ne_t = ne;
   F_ne = 0*ne;
@@ -142,23 +142,17 @@ while(T*t_0 <= 100e-9)
 %   jE_int = jE_int/(1.6e-19*2.5e+25);
   
   
-subplot(2,2,1)
+subplot(3,2,1)
 plot(x*l_0,ne*n_0,'b-','LineWidth',2)
 axis tight
 grid on
 title('n_{e}[cm^{-3}]')
 
-subplot(2,2,2)
+subplot(3,2,2)
 plot(x*l_0,(np)*n_0,'b-','LineWidth',2)
 axis tight
 grid on
 title('n_{p}[cm^{-3}]')
-
-% subplot(2,2,3)
-% plot(x*l_0,E*E_0,'b-','LineWidth',2)
-% axis tight
-% grid on
-% title('E[kV cm^{-1}]')
 
 % subplot(2,2,4)
 % plot(x*l_0,jE_int,'b-','LineWidth',2)
@@ -166,7 +160,7 @@ title('n_{p}[cm^{-3}]')
 % grid on
 % title('jE_{int}')
 
-subplot(2,2,3)
+subplot(3,2,3)
 % plot(x*l_0,(F_ne/2)*(mu_e*n_0*E_0/l_0),'b-','LineWidth',2)
 plot(x*l_0,(F_ne/2),'b-',x*l_0,1./mu^2*ones(1,m),'r-','LineWidth',2)
 % plot(x*l_0,(F_ne/2),'b-',x*l_0,1./mu*ones(m),'r-','LineWidth',2)
@@ -174,13 +168,19 @@ axis tight
 grid on
 title('F_{n_{e}}')
 
-% subplot(2,2,4)
-% plot(x*l_0,F_np/2,'b-','LineWidth',2)
-% axis tight
-% grid on
-% title('F_{n_{p}}')
+subplot(3,2,4)
+plot(x*l_0,F_np/2,'b-','LineWidth',2)
+axis tight
+grid on
+title('F_{n_{p}}')
 
-subplot(2,2,4)
+subplot(3,2,5)
+plot(x*l_0,E*E_0,'b-','LineWidth',2)
+axis tight
+grid on
+title('E[kV cm^{-1}]')
+
+subplot(3,2,6)
 plot(x*l_0,ne./(np+eps),'b-','LineWidth',2)
 axis tight
 grid on
