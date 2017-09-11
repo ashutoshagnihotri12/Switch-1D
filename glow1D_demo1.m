@@ -5,13 +5,13 @@ clear all
 % This program uses adiabatic elimination approximation.
 limiter = @newKorenLimiter;
 [mu_e, D_e, n_0, l_0, t_0, E_0] = units(1.0);
-L = 600;
+L = 200;
 m = 200;
 h = L/m;
 x = h*([1:m] - 1/2);
-mu = 0.0035;
-gamma = 0.3;
-phiLB = 81;  phiRB = 0 ;
+mu = 0.35;
+gamma = 0.07;
+phiLB = 17;  phiRB = 0 ;
 
 % Initial condition(s) for electron and ion-density.
 
@@ -20,10 +20,10 @@ phiLB = 81;  phiRB = 0 ;
 % sigma = 10;
 % np = 1e-6*exp(-(x - x0).^2/sigma^2);
 % NE = 0*np;
-x0 = 0.5*L;
-sigma = 10;
-np = 3e-3*exp(-((x-x0).^2)/sigma^2);
-NE = 0*np;
+% x0 = 0.5*L;
+% sigma = 10;
+% np = 3e-3*exp(-((x-x0).^2)/sigma^2);
+% NE = 0*np;
 
 % Initial condition 2
 % np = (0.5*L < x & x < 0.7*L)*1e-6;
@@ -31,8 +31,8 @@ NE = 0*np;
 
 
 % Initial condition 3
-% np = (0.8*L < x & x < 1.0*L)*1e-6;
-% NE = 0*np;
+np = (0.5*L < x & x < 0.7*L)*1e-6;
+NE = 0*np;
 
 % Initial condition 4
 % np = csvread('np.dat');
@@ -127,18 +127,34 @@ axis tight
 grid on
 title('n_{p}[cm^{-3}]')
 
+% subplot(2,2,3)
+% plot(x*l_0,E*E_0,'b-','LineWidth',2)
+% axis tight
+% grid on
+% title('E[kV cm^{-1}]')
+
+% subplot(2,2,3)
+% plot(x*l_0,F_np/2,'b-','LineWidth',2)
+% axis tight
+% grid on
+
 subplot(2,2,3)
-plot(x*l_0,E*E_0,'b-','LineWidth',2)
+semilogx((T/mu)*t_0 ,F_np(end),'b.','LineWidth',2)
 axis tight
 grid on
-title('E[kV cm^{-1}]')
+hold on
+
+% subplot(2,2,4)
+% plot(x*l_0,jE_int,'b-','LineWidth',2)
+% axis tight
+% grid on
+% title('jE_{int}')
 
 subplot(2,2,4)
-plot(x*l_0,jE_int,'b-','LineWidth',2)
+plot(x*l_0,sign(np-mu*NE),'b.','LineWidth',2)
 axis tight
 grid on
-title('jE_{int}')
-% 
+
 % ax = axes;
 % T1 = title(num2str((T/mu)*t_0));
 % ax.Visible = 'off';
